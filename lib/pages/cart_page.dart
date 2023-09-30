@@ -10,6 +10,29 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>().cart;
 
+    // Function to handle item removal and display snackbar
+    void removeCartItem(BuildContext context, dynamic cartItem) {
+      final cartProvider = context.read<CartProvider>();
+
+      // Show a snackbar with an undo option
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Item removed from cart'),
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              // Add the removed item back to the cart
+              cartProvider.addProduct(cartItem);
+            },
+          ),
+        ),
+      );
+
+      // Remove the item from the cart
+      cartProvider.removeProduct(cartItem);
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -46,9 +69,9 @@ class CartPage extends StatelessWidget {
               ),
             ),
             onDismissed: (direction) {
-              context.read<CartProvider>().removeProduct(cartItem);
+              removeCartItem(context, cartItem);
             },
-            direction: DismissDirection.endToStart,
+            direction: DismissDirection.startToEnd,
             child: ListTile(
               leading: CircleAvatar(
                 backgroundImage: AssetImage(cartItem['imageUrl'].toString()),
@@ -86,7 +109,7 @@ class CartPage extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              context.read<CartProvider>().removeProduct(cartItem);
+                              removeCartItem(context, cartItem);
                               Navigator.of(context).pop();
                             },
                             child: const Text(

@@ -32,12 +32,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Product added successfully!'),
+          duration: Duration(milliseconds: 100),
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select a size!'),
+          duration: Duration(milliseconds: 100),
         ),
       );
     }
